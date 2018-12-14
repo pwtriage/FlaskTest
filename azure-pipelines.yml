@@ -13,5 +13,15 @@ variables:
   imageName: 'pwtriageit/hello-worlds:$(build.buildId)'
 
 steps:
+- script: docker login -u $(dockerId) -p $(dockerPassword)
+  displayName: Docker login
+
 - script: docker build -f Dockerfile -t $(imageName) .
   displayName: 'docker build'
+
+- task: Docker@1
+  displayName: Push image
+  inputs:
+    imageName: '$(imageName)'
+    includeLatestTag: "$(includeLatest)"
+    command: 'push'
